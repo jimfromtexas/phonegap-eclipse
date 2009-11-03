@@ -2,70 +2,104 @@
 <?eclipse version="3.2"?>
 <plugin>
 
-   <extension
-         id="phonegapBuilder"
-         name="PhoneGap Project Builder"
-         point="org.eclipse.core.resources.builders">
-      <builder
-            hasNature="true">
-         <run
-               class="phonegapeclipse.builder.PhoneGapBuilder">
-         </run>
-      </builder>
-   </extension>
-   <extension
-         id="phonegapNature"
-         name="PhoneGap Nature"
-         point="org.eclipse.core.resources.natures">
-      <runtime>
-         <run
-               class="phonegapeclipse.builder.PhoneGapNature">
-         </run>
-      </runtime>
-      <builder
-            id="PhoneGapEclipse.phonegapBuilder">
-      </builder>
-   </extension>
-   <extension
-         point="org.eclipse.ui.popupMenus">
-      <objectContribution
-            adaptable="true"
-            objectClass="org.eclipse.core.resources.IProject"
-            nameFilter="*"
-            id="PhoneGapEclipse.contribution1">
-         <action
-               label="Add/Remove Sample Nature"
-               class="phonegapeclipse.builder.ToggleNatureAction"
-               menubarPath="additions"
-               enablesFor="+"
-               id="PhoneGapEclipse.addRemoveNatureAction">
-         </action>
-      </objectContribution>
-   </extension>
-   <extension
-         id="xmlProblem"
-         name="XML Problem"
-         point="org.eclipse.core.resources.markers">
-      <super
-            type="org.eclipse.core.resources.problemmarker">
-      </super>
-      <persistent
-            value="true">
-      </persistent>
-   </extension>
-   <extension
-         point="org.eclipse.ui.newWizards">
-      <category
-            name="Sample Wizards"
-            id="PhoneGapEclipse">
-      </category>
-      <wizard
-            name="PhoneGap file"
-            icon="icons/sample.gif"
-            category="PhoneGapEclipse"
-            class="phonegapeclipse.wizards.SampleNewWizard"
-            id="phonegapeclipse.wizards.SampleNewWizard">
-      </wizard>
-   </extension>
+	<extension-point id="com.phonegap.sdk" name="SDK" schema="schema/com.phonegap.sdk.exsd"/>
+
+	<extension point="com.phonegap.sdk">
+		<sdk path="c:\bin\phonegap_1.0" />
+	</extension>
+
+	<extension point="org.eclipse.ui.newWizards">
+		<category 
+			id="com.phonegap" 
+			name="PhoneGap"> 
+		</category>
+		<category
+			parentCategory="com.phonegap"
+            name="PhoneGap Project"
+            id="com.phonegap.PhoneGap">
+		</category>
+		<wizard
+            name="PhoneGap Project"
+            icon="icons/phonegap.png"
+            category="PhoneGap"
+            class="com.phonegap.wizards.NewProjectWizard"
+            id="com.phonegap.wizards.NewProjectWizard"
+            project="true"
+            descriptionImage="icons/phonegap.png"
+            canFinishEarly="true"
+            hasPages="true"
+            >
+            <description>
+            </description>
+            <!-- finalPerspective -->
+		</wizard>
+	</extension>
+
+    <extension point="org.eclipse.debug.core.launchConfigurationTypes">
+		<launchConfigurationType
+			delegate="com.phonegap.runtime.SimulatorLaunchConfigurationDelegate"
+			id="com.phonegap.debug.SimulatorLaunchConfigurationType"
+			modes="run,debug"
+			name="PhoneGap"
+			public="true">
+		</launchConfigurationType>
+	</extension>
+
+	<extension point="org.eclipse.debug.ui.launchConfigurationTypeImages">
+		<launchConfigurationTypeImage
+			configTypeID="com.phonegap.debug.SimulatorLaunchConfigurationType"
+			icon="icons/phonegap.png"
+			id="com.phonegap.SimulatorLaunchConfigurationTabGroup"/>
+	</extension>
+
+	<extension point="org.eclipse.ui.preferencePages">
+		<page
+			category="com.phonegap.preferences.GeneralPreferencePage"
+			class="com.phonegap.preferences.SDKPreferencePage"
+			id="com.phonegap.preferences.SDKPreferencePage"
+			name="PhoneGap SDK"/>
+	</extension>
+
+    <extension point="org.eclipse.debug.ui.launchConfigurationTabGroups">
+		<launchConfigurationTabGroup
+			class="com.phonegap.runtime.SimulatorLaunchConfigurationTabGroup"
+			description="Run a PhoneGap application"
+			id="com.phonegap.SimulatorLaunchConfigurationTabGroup"
+			type="com.phonegap.debug.SimulatorLaunchConfigurationType">
+			<launchMode 
+				mode="run"
+				description="Run a PhoneGap application"/>
+			<launchMode
+				mode="debug"
+				description="Debug a PhoneGap application"
+				perspective="org.eclipse.debug.ui.DebugPerspective"/>
+		</launchConfigurationTabGroup>
+	</extension>
+
+	<extension id="com.phonegap.phonegapnature"
+		name="PhoneGap Nature"
+		point="org.eclipse.core.resources.natures">
+		<runtime>
+			<run class="com.phonegap.project.PhoneGapProjectNature"/>
+		</runtime>
+		<!--<builder id="com.phonegap.phonegapbuilder"></builder>-->
+	</extension>
+
+<!--
+	<extension id="com.phonegap.phonegapbuilder"
+		point="org.eclipse.core.resources.builders" 
+		name="PhoneGap Builder">
+		<builder>
+			<run class="com.aptana.ide.framework.apollo.jaxer.JaxerAIRBuilder" />
+		</builder>
+	</extension>
+
+	<extension point="org.eclipse.ui.ide.projectNatureImages">
+		<image
+			icon="icons/phonegap.png"
+			id="com.phonegap.phonegapNatureImage"
+			natureId="com.phonegap.phonegapnature"/>
+	</extension>
+-->
 
 </plugin>
